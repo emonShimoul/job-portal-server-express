@@ -17,6 +17,29 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+const logger = (req, res, next) => {
+  console.log("inside the logger");
+  next();
+};
+
+const verifyToken = (req, res, next) => {
+  console.log("inside verify token middleware");
+  const token = req?.cookies?.token;
+  console.log(token);
+
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorized Access!!" });
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+    if (error) {
+      return res.status(401), send({ message: "Unauthorized Access!!" });
+    }
+    //
+    next();
+  });
+};
+
 // DB_USER = jobPortal
 // DB_PASS = GcRcJUb9tQKXDstY
 
@@ -61,7 +84,9 @@ async function run() {
       .db("jobPortal")
       .collection("job_applications");
 
-    app.get("/jobs", async (req, res) => {
+    app.get("/jobs", logger, async (req, res) => {
+      console.log("now inside the api callback");
+
       const email = req.query.email;
       let query = {};
       if (email) {
@@ -87,11 +112,11 @@ async function run() {
 
     // job application apis
 
-    app.get("/job-application", async (req, res) => {
+    app.get("/job-application", verifyToken, async (req, res) => {
       const email = req.query.email;
       const query = { applicant_email: email };
 
-      console.log("Cookies: ", req.cookies);
+      // console.log("Cookies: ", req.cookies);
 
       const result = await jobApplicationsCollection.find(query).toArray();
 
