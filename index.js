@@ -35,7 +35,7 @@ const verifyToken = (req, res, next) => {
     if (error) {
       return res.status(401), send({ message: "Unauthorized Access!!" });
     }
-    //
+    req.user = decoded;
     next();
   });
 };
@@ -115,6 +115,10 @@ async function run() {
     app.get("/job-application", verifyToken, async (req, res) => {
       const email = req.query.email;
       const query = { applicant_email: email };
+
+      if (req.user.email !== email) {
+        return res.status(403).send({ message: "Forbidden Access" });
+      }
 
       // console.log("Cookies: ", req.cookies);
 
