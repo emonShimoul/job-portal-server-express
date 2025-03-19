@@ -24,5 +24,7 @@
  * 4. validate the token in the server side:
  * if valid: provide data
  * if not valid: logout
+ * 
+ * 5. check right user accessing his/her own data based on permission
  *
  */
