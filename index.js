@@ -78,6 +78,15 @@ async function run() {
         .send({ success: true });
     });
 
+    app.post("/logout", (req, res) => {
+      res
+        .clearCookie("token", {
+          httpOnly: true,
+          secure: false,
+        })
+        .send({ success: true });
+    });
+
     // jobs related apis
     const jobsCollection = client.db("jobPortal").collection("jobs");
     const jobApplicationsCollection = client
