@@ -23,9 +23,8 @@ const logger = (req, res, next) => {
 };
 
 const verifyToken = (req, res, next) => {
-  console.log("inside verify token middleware");
   const token = req?.cookies?.token;
-  console.log(token);
+  // console.log("inside verify token - ", token);
 
   if (!token) {
     return res.status(401).send({ message: "Unauthorized Access!!" });
