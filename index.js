@@ -39,9 +39,6 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-// DB_USER = jobPortal
-// DB_PASS = GcRcJUb9tQKXDstY
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pabg0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -134,7 +131,6 @@ async function run() {
 
       // not the best way
       for (const application of result) {
-        // console.log(application.job_id);
         const query1 = { _id: new ObjectId(application.job_id) };
         const job = await jobsCollection.findOne(query1);
         if (job) {
